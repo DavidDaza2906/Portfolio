@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Full Stack Developer and Machine Learning</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="#hero" class="navbar-brand">Portfolio</a>
+            <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="navbar-menu" id="navbarMenu">
+                <li><a href="#hero" class="navbar-link">Home</a></li>
+                <li><a href="#skills" class="navbar-link">Skills</a></li>
+                <li><a href="#projects" class="navbar-link">Projects</a></li>
+                <li><a href="#experience" class="navbar-link">Experience</a></li>
+                <li><a href="#contact" class="navbar-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="hero">
+        <canvas class="hero-background" id="heroToroid"></canvas>
+        <div class="container">
+            <div class="hero-content">
+                <h1>David Daza </h1>
+                <h2> Full Stack and Data Science</h2>
+                <p>Specialized in modern web development, data science, and machine learning</p>
+                <a href="#contact" class="btn btn--primary">Contact Me</a>  
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section about-section" id="about">
+        <canvas class="contact-background" id="particleNetwork"></canvas>
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <h3>I'm David Daza, a passionate Developer and Data Scientist with experience in building dynamic web applications and analyzing datasets. I love creating efficient solutions that drive results and enhance user experiences.</h3>
+                <p>My interest spans across modern web technologies, data analysis, and machine learning. I'm constantly learning and exploring new technologies to stay at the forefront of the industry.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="skills">
+        <canvas class="skills-background" id="skillsPerlin"></canvas>
+        <div class="container">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Full Stack Development</h3>
+                    <p>React,Vite, Node.js, Python, MongoDB. </p>
+                </div>
+                <div class="skill-card">
+                    <h3>Data Science</h3>
+                    <p>Data analysis, visualization, processing of large volumes of information with Python and R.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Machine Learning</h3>
+                    <p>Predictive models, neural networks, NLP, n8n, and computer vision with TensorFlow and PyTorch.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="projects">
+        <canvas class="section-divider top" id="sphereWaves"></canvas>
+        <div class="container">
+            <h2 class="section-title">Featured projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Algo-Ritmo</h3>
+                        <p>Full-stack web application for online music academy with React, MongoDB, and PayPal integration.</p>
+                        <div class="project-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Vite</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Human Feedback for LLMs</h3>
+                        <p>Machine learning project applying RLHF and DPO techniques to optimize language models.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">PyTorch</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>Sentiment analysis in news</h3>
+                        <p>Sentiment analysis to identify the bias and reliability of a news portal using NLP, BERT and transformers.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Textblob</span>
+                            <span class="tag">Transformers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <div class="experience-timeline">
+                <div class="experience-item">
+                    <h3>Database Responsible</h3>
+                    <h4>Instituto Nacional de Salud</h4>
+                    <p class="date">2024-II</p>
+                            <li>• Implementation of data governance and quality control models</li>
+                            <li>• Data cleaning and validation for large-scale datasets</li>
+                            <li>• SQL queries and database optimization</li>
+                            <li>• Automation of periodic reporting processes</li>
+                </div>
+                <div class="experience-item">
+                    <h3>Freelance Data Analysist</h3>
+                    <p class="date">2023-II</p>
+                            <li>• Data cleaning and validation for large-scale datasets</li>
+                            <li>• Implementation of data filtering algorithms to search specific information on large databases</li>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+        <canvas class="contact-background" id="particleNetwork"></canvas>
+        <div class="container">
+            <div class="contact-content">
+                <h2>Contact</h2>
+                <p>Interested in working together? Feel free to reach out</p>
+                <div class="contact-links">
+                    <a href="mailto:daviddaza2906@gmail.com" class="contact-link" target="_blank">📧 Email</a>
+                    <a href="https://github.com/DavidDaza2906" class="contact-link" target="_blank">💻 GitHub</a>
+                    <a href="https://www.linkedin.com/in/daviddaza2906/" class="contact-link" target="_blank">💼 LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
