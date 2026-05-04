@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Image Classifier | David Daza</title>
+    <style>
+        :root {
+            --bg: #1F2121;
+            --surface: #262828;
+            --surface2: #2B2D2D;
+            --text: #F5F5F5;
+            --text2: rgba(167,169,169,0.85);
+            --text3: rgba(167,169,169,0.5);
+            --accent: #32b8c6;
+            --accent2: #2da6b2;
+            --accent-rgb: 50,184,198;
+            --border: rgba(119,124,124,0.2);
+            --border-inner: rgba(119,124,124,0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-pill: 9999px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --mono: 'JetBrains Mono', 'Berkeley Mono', ui-monospace, monospace;
+            --warning: #e68161;
+            --danger: #ff5459;
+            --xs: 4px; --sm: 8px; --md: 12px; --lg: 16px; --xl: 24px; --xxl: 32px; --xxxl: 48px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body { min-height: 100vh; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent2); }
+
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(31,33,33,0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); height: 64px;
+            display: flex; align-items: center; padding: 0 var(--xl);
+        }
+        .navbar-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .navbar-brand { font-size: 18px; font-weight: 600; color: var(--accent); text-decoration: none; }
+        .navbar-links { display: flex; gap: var(--md); list-style: none; }
+        .navbar-links a { padding: var(--sm) var(--md); color: var(--text); text-decoration: none; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .navbar-links a:hover { color: var(--accent); background: rgba(var(--accent-rgb),0.08); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 var(--xl); }
+
+        .hero { padding: 120px 0 80px 0; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content:''; position:absolute; top:-200px; left:50%; transform:translateX(-50%); width:600px; height:600px; background:radial-gradient(circle, rgba(var(--accent-rgb),0.06) 0%, transparent 70%); pointer-events:none; }
+        .hero h1 { font-size: 48px; font-weight: 700; margin-bottom: var(--lg); letter-spacing: -0.02em; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { font-size: 18px; color: var(--text2); max-width: 700px; margin: 0 auto var(--xxl) auto; line-height: 1.6; }
+        .hero-badges { display: flex; justify-content: center; gap: var(--sm); flex-wrap: wrap; margin-bottom: var(--xxl); }
+        .badge { padding: var(--xs) var(--md); background: rgba(var(--accent-rgb),0.08); color: var(--accent); border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; font-family: var(--mono); }
+        .hero-links { display: flex; justify-content: center; gap: var(--md); }
+        .btn { display: inline-flex; align-items: center; gap: var(--sm); padding: var(--md) var(--xl); border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #1a3438; }
+        .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); color: #1a3438; }
+        .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+        section { padding: var(--xxxl) 0; }
+        section:nth-child(even) { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .section-title { font-size: 28px; font-weight: 700; margin-bottom: var(--xxl); letter-spacing: -0.01em; }
+        .section-title span { color: var(--accent); }
+
+        .metrics-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--lg); }
+        .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--xl); text-align: center; }
+        .metric-card:hover { border-color: rgba(var(--accent-rgb),0.3); }
+        .metric-value { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; }
+        .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: var(--sm); font-weight: 600; }
+
+        .pipeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--lg); }
+        .pipeline-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--xl); position: relative; }
+        .pipeline-step:hover { border-color: rgba(var(--accent-rgb),0.3); }
+        .pipeline-num { font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: var(--sm); }
+        .pipeline-step h3 { font-size: 16px; margin-bottom: var(--sm); }
+        .pipeline-step p { color: var(--text2); font-size: 13px; line-height: 1.5; }
+
+        .classes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sm); }
+        .class-badge {
+            background: rgba(var(--accent-rgb),0.06); border: 1px solid var(--border-inner);
+            border-radius: var(--radius-sm); padding: var(--md); text-align: center;
+            font-size: 13px; color: var(--text2);
+        }
+        .class-badge:hover { border-color: rgba(var(--accent-rgb),0.25); color: var(--accent); }
+
+        .tech-tags { display: flex; flex-wrap: wrap; gap: var(--sm); }
+        .tech-tag { padding: var(--xs) var(--md); background: var(--surface2); border: 1px solid var(--border-inner); border-radius: var(--radius-pill); font-size: 12px; color: var(--text2); font-family: var(--mono); }
+
+        .footer { text-align: center; padding: var(--xxl) 0; border-top: 1px solid var(--border); color: var(--text3); font-size: 13px; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .pipeline-grid { grid-template-columns: 1fr; }
+            .navbar-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="/" class="navbar-brand">David Daza</a>
+            <ul class="navbar-links">
+                <li><a href="/">Portfolio</a></li>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#metrics">Metrics</a></li>
+                <li><a href="#pipeline">Pipeline</a></li>
+                <li><a href="#classes">Classes</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Retail <span>Image Classifier</span></h1>
+            <p>Deep Learning CNN for retail clothing classification. MobileNetV3-Small fine-tuned on 17.7K real studio photos from DeepFashion InShop. 78.5% accuracy across 12 categories. Exported to ONNX with embedded weights (6.1MB) and running 100% in-browser inference with ONNX Runtime Web.</p>
+            <div class="hero-badges">
+                <span class="badge">MobileNetV3</span>
+                <span class="badge">PyTorch</span>
+                <span class="badge">ONNX Runtime Web</span>
+                <span class="badge">ROCm</span>
+                <span class="badge">Transfer Learning</span>
+            </div>
+            <div class="hero-links">
+                <a href="https://retail-image-classifier.vercel.app" class="btn btn-primary" target="_blank">Live Demo</a>
+                <a href="https://github.com/DavidDaza2906" class="btn btn-ghost" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="overview">
+        <div class="container">
+            <h2 class="section-title"><span>01</span> Overview</h2>
+            <p style="font-size:16px;color:var(--text2);max-width:800px;line-height:1.6;margin-bottom:var(--xxl);">Image classifier trained on real retail product photos using transfer learning with MobileNetV3-Small. The model handles the challenging conditions of studio product photography: varying lighting, different angles, and diverse clothing styles. Exported to ONNX format with weights embedded in a single 6.1MB file for instant browser inference.</p>
+            <div class="tech-tags">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">PyTorch</span>
+                <span class="tech-tag">MobileNetV3</span>
+                <span class="tech-tag">ONNX</span>
+                <span class="tech-tag">ONNX Runtime Web</span>
+                <span class="tech-tag">ROCm</span>
+                <span class="tech-tag">Transfer Learning</span>
+                <span class="tech-tag">DeepFashion</span>
+                <span class="tech-tag">Vercel</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="metrics">
+        <div class="container">
+            <h2 class="section-title"><span>02</span> Performance</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" style="color:var(--accent)">78.5%</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:var(--accent)">78.6%</div>
+                    <div class="metric-label">Precision</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:var(--accent)">78.7%</div>
+                    <div class="metric-label">Recall</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:var(--accent)">78.5%</div>
+                    <div class="metric-label">F1-Score</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="color:var(--accent)">6.1MB</div>
+                    <div class="metric-label">Model Size</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pipeline">
+        <div class="container">
+            <h2 class="section-title"><span>03</span> Training Pipeline</h2>
+            <div class="pipeline-grid">
+                <div class="pipeline-step">
+                    <div class="pipeline-num">Step 1</div>
+                    <h3>Dataset</h3>
+                    <p>DeepFashion InShop filtered to 17.7K images across 12 categories. Real studio photos with diverse poses, lighting, and backgrounds.</p>
+                </div>
+                <div class="pipeline-step">
+                    <div class="pipeline-num">Step 2</div>
+                    <h3>Transfer Learning</h3>
+                    <p>MobileNetV3-Small pre-trained on ImageNet. Classifier head replaced for 12 retail categories. 1.5M trainable parameters.</p>
+                </div>
+                <div class="pipeline-step">
+                    <div class="pipeline-num">Step 3</div>
+                    <h3>Training</h3>
+                    <p>8 epochs with Mixup augmentation, Label Smoothing, and OneCycleLR scheduler. Trained on AMD RX 6600 XT via ROCm.</p>
+                </div>
+                <div class="pipeline-step">
+                    <div class="pipeline-num">Step 4</div>
+                    <h3>Export</h3>
+                    <p>ONNX opset 18 with embedded weights. Single 6.1MB file. No external dependencies for inference.</p>
+                </div>
+                <div class="pipeline-step">
+                    <div class="pipeline-num">Step 5</div>
+                    <h3>Inference</h3>
+                    <p>100% browser-side via ONNX Runtime Web. Preprocessing pipeline visible: resize center-crop normalize CNN classify.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="classes">
+        <div class="container">
+            <h2 class="section-title"><span>04</span> Categories</h2>
+            <div class="classes-grid">
+                <div class="class-badge">Blouses</div><div class="class-badge">Cardigans</div>
+                <div class="class-badge">Dresses</div><div class="class-badge">Graphic Tees</div>
+                <div class="class-badge">Jackets</div><div class="class-badge">Pants</div>
+                <div class="class-badge">Rompers</div><div class="class-badge">Shorts</div>
+                <div class="class-badge">Skirts</div><div class="class-badge">Sweaters</div>
+                <div class="class-badge">Sweatshirts</div><div class="class-badge">Tees</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Retail Image Classifier &middot; David Daza &middot; 2026</p>
+            <p style="margin-top:var(--sm);">
+                <a href="/">Portfolio</a> &middot;
+                <a href="https://retail-image-classifier.vercel.app" target="_blank">Live Demo</a> &middot;
+                <a href="https://github.com/DavidDaza2906" target="_blank">GitHub</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
